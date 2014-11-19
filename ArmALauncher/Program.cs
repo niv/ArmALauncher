@@ -189,7 +189,7 @@ namespace ArmALauncher
             if (va.Length > 0)
                 mod += ";" + va[1];
 
-            mod += ";" + additionalMods;
+            mod += ";" + additionalMods.Replace("|", ";");
 
             string args = additionalArguments + " ";
             args += "\"-mod=" + mod + "\"";
