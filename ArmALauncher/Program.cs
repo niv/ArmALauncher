@@ -104,6 +104,9 @@ namespace ArmALauncher
 
             configSource.Save(configFileName);
 
+            // Arguments prepended to the launch args. Currently only needed for a3battleye
+            var preArgs = "";
+
             if (ts3path == null || !Directory.Exists(ts3path))
             {
                 MessageBox.Show("Cannot find ts3. Please edit " + configFileName + " manually.");
@@ -177,7 +180,15 @@ namespace ArmALauncher
                 // DeployTS3DLL("@acre2", ts3path);
 
                 mod = "";
-                pProcess.StartInfo.FileName = arma3path + "\\arma3.exe";
+
+                string exeName = arma3path + "\\arma3.exe";
+                if (File.Exists(arma3path + "\\arma3battleye.exe"))
+                {
+                    exeName = arma3path + "\\arma3battleye.exe";
+                    preArgs = "0 1 ";
+                }
+
+                pProcess.StartInfo.FileName = exeName;
                 pProcess.StartInfo.WorkingDirectory = arma3path;
             }
             else
@@ -196,7 +207,7 @@ namespace ArmALauncher
             for (int i = 2; i < va.Length; i++)
                 args += " " + va[i];
 
-            pProcess.StartInfo.Arguments = args;
+            pProcess.StartInfo.Arguments = preArgs + args;
             pProcess.StartInfo.UseShellExecute = false;
 
             Log("va: " + args);
