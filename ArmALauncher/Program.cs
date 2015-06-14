@@ -182,11 +182,6 @@ namespace ArmALauncher
                 mod = "";
 
                 string exeName = arma3path + "\\arma3.exe";
-                if (File.Exists(arma3path + "\\arma3battleye.exe"))
-                {
-                    exeName = arma3path + "\\arma3battleye.exe";
-                    preArgs = "0 1 ";
-                }
 
                 pProcess.StartInfo.FileName = exeName;
                 pProcess.StartInfo.WorkingDirectory = arma3path;
