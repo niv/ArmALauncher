@@ -153,7 +153,7 @@ namespace ArmALauncher
                 }
 
                 DeployUserconfig(arma2oapath);
-                DeployTS3DLL("@acre", ts3path);
+                DeployTS3DLL("@acre", ts3path, "acre_");
 
                 mod = arma2path + ";expansion";
 
@@ -177,7 +177,7 @@ namespace ArmALauncher
                 }
 
                 DeployUserconfig(arma3path);
-                // DeployTS3DLL("@acre2", ts3path);
+                DeployTS3DLL("@acre2", ts3path, "acre2_");
 
                 mod = "";
 
@@ -269,7 +269,7 @@ namespace ArmALauncher
             }
         }
 
-        private static void DeployTS3DLL(string modPath, string ts3path)
+        private static void DeployTS3DLL(string modPath, string ts3path, string pluginprefix)
         {
             // Deploy ACRE stuff. The directory name is hardcoded for now, since ACRE seems to depend on that anyways.
             if (Directory.Exists(modPath))
@@ -277,9 +277,9 @@ namespace ArmALauncher
                 // Deploy the plugin DLL.
                 string pluginName = null;
                 if (File.Exists(ts3path + "\\ts3client_win64.exe"))
-                    pluginName = "acre_win64.dll";
+                    pluginName = pluginprefix + "win64.dll";
                 else if (File.Exists(ts3path + "\\ts3client_win32.exe"))
-                    pluginName = "acre_win32.dll";
+                    pluginName = pluginprefix + "win32.dll";
                 else
                 {
                     throw new Exception("Tried to install the acre plugin dll for you, but cannot find the TS3 binary. " +
@@ -290,7 +290,7 @@ namespace ArmALauncher
 
                 if (!File.Exists(pluginTarget))
                 {
-                    var ret = MessageBox.Show("I want to deploy the " + modPath + " teamspeak DLL to " + pluginTarget + "." +
+                    var ret = MessageBox.Show("I want to deploy the " + modPath + " teamspeak DLL (" + pluginName + ") to " + pluginTarget + "." +
                         "Is this the correct path? if NOT, press Cancel now and edit the configuration ini (or set deploy_acre to false).",
                         "Continue?", MessageBoxButtons.OKCancel);
 
@@ -298,7 +298,7 @@ namespace ArmALauncher
                         throw new Exception("Aborted");
 
                     Log("deploying acre plugin: " + pluginTarget);
-                    File.Copy("@acre\\plugin\\" + pluginName, pluginTarget);
+                    File.Copy(modPath + "\\plugin\\" + pluginName, pluginTarget);
                     MessageBox.Show("I've deployed the ACRE plugin to\n\n" + pluginTarget + "\n\nThis is a one-time thing. " +
                         "Please check in your teamspeak install if it's loaded, and restart it if neccessary (as admin!).");
                 }
