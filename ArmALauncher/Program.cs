@@ -288,7 +288,10 @@ namespace ArmALauncher
 
                 string pluginTarget = ts3path + "\\plugins\\" + pluginName;
 
-                if (!File.Exists(pluginTarget))
+                bool wantDeploy = !File.Exists(pluginTarget) ||
+                    Helpers.ChecksumFileSha256(pluginTarget) != Helpers.ChecksumFileSha256(modPath + "\\plugin\\" + pluginName);
+
+                if (wantDeploy)
                 {
                     var ret = MessageBox.Show("I want to deploy the " + modPath + " teamspeak DLL (" + pluginName + ") to " + pluginTarget + "." +
                         "Is this the correct path? if NOT, press Cancel now and edit the configuration ini (or set deploy_acre to false).",
@@ -299,7 +302,7 @@ namespace ArmALauncher
 
                     Log("deploying acre plugin: " + pluginTarget);
                     File.Copy(modPath + "\\plugin\\" + pluginName, pluginTarget);
-                    MessageBox.Show("I've deployed the ACRE plugin to\n\n" + pluginTarget + "\n\nThis is a one-time thing. " +
+                    MessageBox.Show("I've deployed the ACRE plugin to\n\n" + pluginTarget + "\n\n" +
                         "Please check in your teamspeak install if it's loaded, and restart it if neccessary (as admin!).");
                 }
             }

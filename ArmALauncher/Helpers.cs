@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +46,26 @@ namespace ArmALauncher
             }
 
             return wasModified;
+        }
+
+        public static string ChecksumFileSha256(string file)
+        {
+            using (FileStream stream = File.OpenRead(file))
+            {
+                var sha = new SHA256Managed();
+                byte[] checksum = sha.ComputeHash(stream);
+                return BitConverter.ToString(checksum).Replace("-", String.Empty);
+            }
+        }
+
+        public static string ChecksumStreamSha256(Stream stream)
+        {
+            using (var bufferedStream = new BufferedStream(stream, 1024 * 32))
+            {
+                var sha = new SHA256Managed();
+                byte[] checksum = sha.ComputeHash(bufferedStream);
+                return BitConverter.ToString(checksum).Replace("-", String.Empty);
+            }
         }
     }
 }
