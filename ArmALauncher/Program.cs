@@ -294,14 +294,21 @@ namespace ArmALauncher
                 if (wantDeploy)
                 {
                     var ret = MessageBox.Show("I want to deploy the " + modPath + " teamspeak DLL (" + pluginName + ") to " + pluginTarget + "." +
-                        "Is this the correct path? if NOT, press Cancel now and edit the configuration ini (or set deploy_acre to false).",
+                        "Is this the correct path? if NOT, press Cancel now and edit the configuration ini (or set deploy_acre to false). Make sure TeamSpeak IS NOT running before you continue!",
                         "Continue?", MessageBoxButtons.OKCancel);
 
                     if (ret == DialogResult.Cancel)
                         throw new Exception("Aborted");
 
                     Log("deploying acre plugin: " + pluginTarget);
-                    File.Copy(modPath + "\\plugin\\" + pluginName, pluginTarget);
+                    try
+                    {
+                        File.Copy(modPath + "\\plugin\\" + pluginName, pluginTarget, true);
+                    } catch (IOException e)
+                    {
+                        MessageBox.Show("Failed to deploy ACRE DLL. Are you sure TeamSpeak WAS NOT running? Try again and if the error persists contact someone who knows what's going on...", "Error running game");
+                        throw e;
+                    }
                     MessageBox.Show("I've deployed the ACRE plugin to\n\n" + pluginTarget + "\n\n" +
                         "Please check in your teamspeak install if it's loaded, and restart it if neccessary (as admin!).");
                 }
