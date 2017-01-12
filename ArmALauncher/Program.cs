@@ -181,9 +181,9 @@ namespace ArmALauncher
 
                 mod = "";
 
-                string exeName = arma3path + "\\arma3.exe";
+                string exeName = config.Get("exeName", "arma3.exe");
 
-                pProcess.StartInfo.FileName = exeName;
+                pProcess.StartInfo.FileName = arma3path + "\\" + exeName;
                 pProcess.StartInfo.WorkingDirectory = arma3path;
             }
             else
